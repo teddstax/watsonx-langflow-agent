@@ -1,10 +1,10 @@
 # 🧠 Agentic AI Workshop – Customer Support Agent
 
 ## 🎯 Goal of the workshop
-Learn how to build a powerful, intelligent customer support agent using DataStax Langflow. You’ll start by creating a simple chatbot with **watsonx.ai** (IBM's generative AI platform), then enrich it with retrieval-augmented generation (RAG) by connecting it to your own FAQ knowledge base using Astra DB. Finally, you’ll add tools such as order lookups, product info access, calculators, and web tools to make your agent truly agentic—capable of reasoning, taking actions, and handling real-world customer support scenarios.
+Learn how to build a powerful, intelligent customer support agent using **DataStax Langflow**. You’ll start by creating a simple chatbot with **watsonx.ai** (IBM's generative AI platform), then enrich it with retrieval-augmented generation (RAG) by connecting it to your own FAQ knowledge base using **DataStax Astra DB**. Finally, you’ll add tools such as order lookups, product info access, calculators, and web tools to make your agent truly agentic—capable of reasoning, taking actions, and handling real-world customer support scenarios.
 
 By the end of this workshop, you’ll have a fully functional AI agent that can:
-- Answer FAQs using vector-based document search
+- Answer FAQs (unstructured documents) using vector-based document search
 - Retrieve live order and product details from structured data
 - Combine tools (like calculators and lookups) to generate multi-step responses
 - Adapt dynamically to user intent—just like a real support agent would
@@ -24,7 +24,8 @@ Follow the below steps and note down the **Astra DB API Endpoint**, **Astra DB A
 Make sure you have a vector-capable Astra database (get one for free at [astra.datastax.com](https://astra.datastax.com))
 - Sign up or log in
 - Click `Databases` and click `Create Database` 
-- Select `Serverless (Vector)`, type a database name, i.e. `support_agent` and select a Cloud Provider and Region of choice
+- Select `Serverless (Vector)`, type a database name, i.e. `support_agent` and select `AWS` as Cloud Provider and `us-east-2` as Region
+    - ⚠️ Please stick to these settings as that enables us to use the [Astra Vectorize](https://www.datastax.com/blog/simplifying-vector-embedding-generation-with-astra-vectorize) functionality
 - Wait a few minutes for it to provision
 - Note down the **API Endpoint** which can be found in the right pane underneath *Database details*.
 - Click on `Generate Token` and give it a name, i.e. `support_agent-token` and click `Generate`. Now click on the copy button and paste the **Application Token** somewhere for later use
@@ -63,7 +64,7 @@ To make life easier, we'll use the awesome Github Codespace functionality. Githu
 
 4. Cool! You just created a copy in your own Gihub account! Now let's get started with coding. Click `Create codespace on main` as follows:
 
-    ![codespace](./assets/create-codespace.png)
+    ![create-codespace](./assets/create-codespace.png)
 
 5. Configure the secrets as follows:
 
@@ -82,6 +83,8 @@ To make life easier, we'll use the awesome Github Codespace functionality. Githu
     ASTRA_DB_API_ENDPOINT=your-astra-endpoint
     ASTRA_DB_APPLICATION_TOKEN=your-astra-token
     ```
+
+    ![codespace](./assets/codespaces.png)
 
 6. Now we can run Langflow as follows in the terminal window:
 
