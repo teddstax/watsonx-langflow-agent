@@ -240,7 +240,7 @@ Browse back to Langflow, click on `▶️ Playground` and click on `+` on the le
  ![langflow-vector-search](./assets/langflow-vector-search.png)
 
 ### 5. 📈 Adding structured data
-**Goal:** Enable your Agent to retrieve structured order and product details.
+**Goal:** Every enterprise has structured data alongside unstructured data and often these are related to each other. This step enables your Agent to retrieve structured order and product details.
 
 #### Preparation: Add Orders data
 1. Browse to your `support_agent` database on [Astra DB](https://astra.datastax.com)
@@ -257,24 +257,24 @@ Browse back to Langflow, click on `▶️ Playground` and click on `+` on the le
 
 #### Steps 🛠️🔍: Add Order Lookup to the agent 
 1. Return to your Langflow flow
-2. Collapse `Tools` and drag `Astra DB Tool` to the canvas
+2. Collapse `DataStax` and drag `Astra DB Tool` to the canvas
 3. Configure as follows:
     - **Tool Name:** `OrderLookup`  
     - **Tool Description:** `A tool used to look up an order based on its ID`   
     - **Collection Name:** `orders`  
     - Ensure `Astra DB Application Token` and `API endpoint` are configured
     - Click `Open Table`, click `+` to add a field and update the field name to `orderNumber`, then click `Save` (this allows the tool to use the orderNumber column for queries)
-4. Connect the `Astra DB Tool` component to the `Agent` component
+4. Connect the `Astra DB Tool` component to the `Agent` component while selecting `Tool` as output mode.
 
 #### Steps 🛠️🔍: Add Products Lookup to the agent 
-1. Collapse `Tools` and drag `Astra DB Tool` to the canvas
+1. Collapse `DataStax` and drag `Astra DB Tool` to the canvas
 2. Configure as follows:
     - **Tool Name:** `ProductLookup`  
     - **Tool Description:** `A tool used to look up a product based on its ID`   
     - **Collection Name:** `products`  
     - Ensure `Astra DB Application Token` and `API endpoint` are configured
     - Click `Open Table`, click `+` to add a field and update the field name to `productId`, then click `Save` (this allows the tool to use the productId column for queries)
-3. Connect the `Astra DB Tool` component to the `Agent` component
+3. Connect the `Astra DB Tool` component to the `Agent` component while selecting `Tool` as output mode.
 
 #### Steps 💬: Instruct the Agent
 Let's provide our Agent a bit more information about what it's capable of doing and what guardrails to take into account. This enables more accuracy for our Customer Support Agent.
@@ -310,7 +310,7 @@ For ease of use, this flow is also available here: [./flows/customer-support-age
 - A calculator
 - Capability to fetch information from the internet
 
-Let's run some questions. For instance:
+Let's run some queries. For instance:
 
 - What's the shipping status of order 1001?
 - What was ordered with 1003?
@@ -325,37 +325,41 @@ Observe how all the different tools are being used to answer the user's question
 In this step we'll create a simple Python app that runs the Langflow flow.
 
 #### Steps: Use the Langflow API endpoint in Python
-1. In Langflow exit the Playground and click on `Publish` in the right top corner and then click `API Access`
+1. In Langflow exit the Playground and click on `Share` in the right top corner and then click `API Access`
 2. Click on `Python`
 3. Copy the code and paste it in a new file called `flow.py`
-4. Change the input value on line 6 to something like *How can I cancel order 1001 and what is the shipping policy?*
+    - Change the `url` variable on line to 10 to `http://localhost:7860`, make sure to keep the full path (`/api/...`)!
+    - Change the `input_value` variable on line 16 to something like '*How can I cancel order 1001 and what is the shipping policy?*'
 5. Save the file
+6. In the same API Access window in Langflow now click the `create and API key` link
+7. In the new window, click `+ Add New`, type a description (e.g. Support Agent) and click `Generate API Key`
+8. Make note of the generated API Key
+    - ⚠️ This is the only time you'll see it, so make sure you save it somewhere handy!
 
 ![langflow-python-api](./assets/langflow-python-api.png)
 
 Let's run it!
 
 ```bash
+export LANGFLOW_API_KEY=<your just generated API key>
 uv run flow.py
 ```
 
 As a response you'll see a JSON structure that contains the actual answer and additonal metadata.  
 The answer you're probably looking for is located inside the JSONPath `$.outputs[0].outputs[0].results.message.text`.
 
-If you change line 22 to the following, you'll see the actual response: `print(response.json()['outputs'][0]['outputs'][0]['results']['message']['text'])`
+If you change line 31 to the following, you'll see the actual response: `print(response.json()['outputs'][0]['outputs'][0]['results']['message']['text'])`
 
 *(If you want to use watsonx.ai directly in your Python code, see the [watsonx.ai Python SDK documentation](https://ibm.github.io/watsonx-ai-python-sdk/). You can use the SDK to call the LLM endpoint with your API key, project ID, and prompt.)*
 
 ### 6. 🤩 Add a visual front-end
 In this step we'll use a simple Streamlit app that supports Customer Support Agents.
 
-#### Steps: Configure the Langflow FLOW_ID
-1. Open `app.py`
-2. Update line 9 to the `FLOW_ID` of your flow, you can find the Flow ID in Langflow by clicking on `Publish->API Access` and taking the ID after `.../run/`
-3. Save the file
+⚠️ You need the Flow ID of your flow which can be found as the unique ID following `.../flow/` in the URL of Langflow while your Flow is open. Otherwise you can find it on line 10 in `flow.py`  following `.../run/`.
 
 In order to run the app:
 ```bash
+export LANGFLOW_FLOW_ID=<your flow id>
 uv run streamlit run app.py
 ```
 

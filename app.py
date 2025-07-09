@@ -1,13 +1,15 @@
 import streamlit as st
 import requests
 from dotenv import load_dotenv
+import os
 
 # Load environment variables
 load_dotenv()
 
 # Flow configuration
-FLOW_ID = "YOUR_FLOW_ID_HERE"
-FLOW_URL = f"http://127.0.0.1:7861/api/v1/run/{FLOW_ID}"
+API_KEY=os.getenv("LANGFLOW_API_KEY")
+FLOW_ID = os.getenv("LANGFLOW_FLOW_ID")
+FLOW_URL = f"http://localhost:7860/api/v1/run/{FLOW_ID}"
 TWEAKS = {}
 
 def run_flow(message, endpoint=FLOW_ID, output_type="chat", input_type="chat", tweaks=None):
@@ -19,7 +21,8 @@ def run_flow(message, endpoint=FLOW_ID, output_type="chat", input_type="chat", t
     }
     
     headers = {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "x-api-key": API_KEY  # Authentication key from environment variable
     }
     
     try:
