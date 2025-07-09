@@ -109,7 +109,7 @@ To make life easier, we'll use the awesome Github Codespace functionality. Githu
 3. Collapse `Inputs` and drag the `Chat Input` component to the canvas
 4. Collapse `Models` and drag the `IBM watsonx.ai` component to the canvas. Connect `Input` to the `Chat Input`
     - Ensure that the `API Endpoint`, `Project ID` and `API Key` have been set correctly
-    - Select `ibm/granite-3-3-8b-instruct` as the `model`
+    - Select `ibm/granite-3-3-8b-instruct` as the `model`  (or try another one and check out the differences)
 5. Collapse `Outputs` and drag the `Chat Output` component to the canvas. Connect `Message` to the `Chat Output` component
 
 ![chatbot-flow](./assets/chatbot-flow.png)
@@ -126,7 +126,7 @@ You'll see **watsonx.ai** answer your question nicely!
 #### Steps:
 1. If still open, close the Playground popup
 2. Select `Chat Input` and click `Controls`
-3. You'll see a field name `Text`, type `What's the difference between AI and Machine Learning` in the text field. close the popup
+3. You'll see a field name `Input Text`, type `What's the difference between AI and Machine Learning` in the text field. close the popup
 4. Select `Chat Output`, the three dots `...` and click `Expand`
 5. Do the same with `Chat Input`
 6. Click the play button `▶️` on the `Chat Output` component and see the flow run
@@ -143,16 +143,16 @@ Click the magnifying glass `🔍` in the `watsonx.ai` component. This shows you 
 
 #### Steps:
 1. Reproduce the above flow (or load it from [./flows/basic-agentic-ai.json](./flows/basic-agentic-ai.json))
-2. Ensure that the `API Endpoint`, `Project ID` and `API Key` have been set correctly
-3. Ensure the model is set to a chat-capable model, such as `ibm/granite-3-3-8b-instruct`
+2. For watsonx.ai, ensure that the `API Endpoint`, `Project ID` and `API Key` have been set correctly. Also make sure the output is set to `Language Model`.
+3. Ensure the model is set to a chat-capable model, such as `meta/meta-llama-3-3-70b-instruct`
 4. When adding the `URL` and `Calculator` components to the canvas, select them and click `Tool mode`
 5. Connect all the components
 
 👏 Amazing! You just built your first AI Agent. Let's run it by clicking `▶️ Playground` and asking the question:
 
-    What is 2x the value of a Euro in Dollars
+    What is 2x the value of a Euro in Dollars, using the latest most recent data
 
-You'll get an answer stating a value of $2.16 or something (as of April 2025).
+You'll get an answer stating a value of $2.34 or something (as of July 2025).
 
 To see the magic behind, simply click the down arrow `🔽`. The Agent decided to use two tools:
 1. The URL tool to fetch the current exchange rates
@@ -183,11 +183,11 @@ Extend your existing Basic Agentic AI flow with the following:
 1. Collapse `Vector Stores` and drag `Astra DB` to the canvas
 2. Click the component and select `Tool mode`
 3. Make sure the `Astra DB Application Token` is configured, then select your `support_agent` database and `company_faq` collection
-4. Click `Edit tools` and update the three `Tool descriptions` by replacing
+4. Click the config button behind `Actions` and update the three `Tool descriptions` by replacing
     - `Ingest and search documents in Astra DB` with
-    - `Answer frequently asked questions (FAQs) about shipping, returns, placing orders, and more.`
+    - `Answer frequently asked questions (FAQs) about shipping, returns, placing orders, and more`
     - ![astra-rag-agent](./assets/rag-edit-tools.png)
-    - Click `Save`
+    - Click `Close x`
     - ⚠️ This essential step ensures the Agent understands to use this specific tool to search for FAQs
 4. Connect the `Astra DB` component to the `Agent` component
 
@@ -198,13 +198,13 @@ Let's run it by clicking `▶️ Playground` and asking the question:
 
     What are your shipping times?
 
-As a response we get a generic answer. Why? Because our collection is still empty. Let's fix that!
+As a response we get a generic answer OR the agent just stops because of too many iterations. Why? Because our collection is still empty. Let's fix that!
 
 #### Steps: Add some articles to our knowledge base
 Extend your flow with the following additional flow (scroll down a bit for a blank piece of canvas):
 1. Collapse `Data` and drag `File` to the canvas
 2. Click on `Upload a file` and upload [./data/Company_FAQ.pdf](./data/Company_FAQ.pdf) from this repository (you'll have to download it first)
-3. Collapse `Langchain` and drag `Recursive Character Splitter` to the canvas
+3. Collapse `Processing` and drag `Split Text` to the canvas
 4. Set the `Chunk size` to 500 (because NV-Embed-QA only allows 512 tokens at maximum) and `Chunk overlap` to 100 (so that every chunk has a bit of information from the previous one)
 5. Collapse `Vector Stores` and drag `Astra DB` to the canvas
 6. Make sure the `Astra DB Application Token` is configured, then select your `support_agent` database and `company_faq` collection
@@ -222,18 +222,22 @@ In this step we'll have a look at the dataset in your `support_agent` database i
 3. Observe the data loaded into the collection on the right side of the screen
 4. Toggle from `Table` to `JSON` view and collapse some of the rows to see what's inside
 
-To see Vector Search in action, type the following in the text box `Vector Search`:
+To see Vector Search in action, type the following in the text box `Search`:
 
     What are your shipping times
 
-You'll see the chunk with shipping times show up as the first result. You just ran an ANN search transparantly utilizing the Vectorize functionality in Astra DB that does the vectorization for you on demand.
+You'll see the chunk with shipping times show up as the first result. You just ran an Approximate Nearest Neighbor (ANN) search transparantly utilizing the Vectorize functionality in Astra DB that does the vectorization for you on demand.
+
+![astra-vector-search](./assets/astra-vector-search.png)
 
 #### 🚀 Now let's run the Agent in Langflow
-Click on `▶️ Playground` and click on `+` on the left side to start a new Chat. Then run the following question:
+Browse back to Langflow, click on `▶️ Playground` and click on `+` on the left side to start a new Chat. Then run the following question:
 
     How many hours do I need to wait for a domestic order?
 
  🎉 You'll see the Agent making use of the Astra DB knowledge base to find relevant content and then running the calculator to calculate the amount of hours to wait.
+
+ ![langflow-vector-search](./assets/langflow-vector-search.png)
 
 ### 5. 📈 Adding structured data
 **Goal:** Enable your Agent to retrieve structured order and product details.
