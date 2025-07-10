@@ -96,6 +96,10 @@ To make life easier, we'll use the awesome Github Codespace functionality. Githu
 
     This starts Langflow and opens a port to your Codespace in the cloud. In case you lose track of the URL to Langflow, just click on `PORTS` in the terminal window.
 
+    ⚠️ Ensure you set the Port Visibility to Public, especially important for the MCP server part later on in this tutorial!
+
+    ![public-port](./assets/public-port.png)
+
 🎉 Congrats! You finished the set-up part of the workshop. Now for the fun part!
 
 ## 📦 Workshop follow-along
@@ -350,17 +354,62 @@ The answer you're probably looking for is located inside the JSONPath `$.outputs
 
 If you change line 31 to the following, you'll see the actual response: `print(response.json()['outputs'][0]['outputs'][0]['results']['message']['text'])`
 
-*(If you want to use watsonx.ai directly in your Python code, see the [watsonx.ai Python SDK documentation](https://ibm.github.io/watsonx-ai-python-sdk/). You can use the SDK to call the LLM endpoint with your API key, project ID, and prompt.)*
+💡 If you want to use watsonx.ai directly in your Python code, see the [watsonx.ai Python SDK documentation](https://ibm.github.io/watsonx-ai-python-sdk/). You can use the SDK to call the LLM endpoint with your API key, project ID, and prompt.
 
-### 6. 🤩 Add a visual front-end
+### 6. 🤩 Add a visual front-end app
 In this step we'll use a simple Streamlit app that supports Customer Support Agents.
 
 ⚠️ You need the Flow ID of your flow which can be found as the unique ID following `.../flow/` in the URL of Langflow while your Flow is open. Otherwise you can find it on line 10 in `flow.py`  following `.../run/`.
 
 In order to run the app:
 ```bash
+export LANGFLOW_API_KEY=<your just generated API key>
 export LANGFLOW_FLOW_ID=<your flow id>
 uv run streamlit run app.py
 ```
 
 ![streamlit-front-end](./assets/streamlit-front-end.png)
+
+### 7. Publish as an MCP server
+MCP helps you build agents and complex workflows on top of LLMs. LLMs frequently need to integrate with data and tools, and MCP provides:
+- A growing list of pre-built integrations that your LLM can directly plug into
+- The flexibility to switch between LLM providers and vendors
+- Best practices for securing your data within your infrastructure
+
+Langflow easily enables you to publish your flows as an MCP server. Let see how!
+
+#### Steps: Publish the flow as MCP server
+1. Go back to your Langflow canvas
+2. Click `Share` and `MCP Server`
+3. Click `Edit Tools` and ensure the Tool name and Tool description describe something meaningful
+    ![mcp-tool](./assets/mcp-tool.png)
+3. Select the `JSON` tab and your preferred environment
+4. Copy the configuration and store it somewhere for later use
+
+#### Steps: Enable Claude desktop to call Langflow MCP
+1. Download [Claude Desktop](https://claude.ai/download)
+2. Create a (free) account and sign in
+3. Click `Settings` and `Developer`
+4. Click `Edit Config`, right-click `claude_desktop_config.json` and open it with your favorite IDE
+5. Now paste the JSON contents from Langflow and save it
+    - ⚠️ You may need to define the full path to `uvx`. On a linux based environment use `which uvx` to find out where it's installed. See the example below:
+
+    ![claude-config](./assets/claude-config.png)
+
+6. Restart Claude desktop to load the new config and allow Claude to read the tool availability
+
+🥳 You did it! You now have access to the Langflow flow through a MCP client. Run a query like:
+
+    What's the status of my order 1001
+
+And you'll get something back like:
+
+![claude-desktop](./assets/claude-desktop.png)
+
+💡 There's more information about working with MCP in the [Claude developer docs](https://modelcontextprotocol.io/quickstart/user).
+
+💡 In case you want to debug MCP servers or understand what's happening on the line, you can use [MCP Inspector](https://github.com/modelcontextprotocol/inspector). It's easy to run it through:
+
+```sh
+npx @modelcontextprotocol/inspector
+```
