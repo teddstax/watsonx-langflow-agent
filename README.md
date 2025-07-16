@@ -15,8 +15,8 @@ This workshop assumes you have access to:
 
 During the course, you'll gain access to the following by signing up for free:
 1. [DataStax Astra DB](https://astra.datastax.com) (you can sign up through your **public** Github account)
-2. [IBM watsonx.ai](https://www.ibm.com/products/watsonx-ai) (you can sign up for a free trial)
-3. [DataStax Langflow](https://langflow.org) access
+2. [IBM watsonx.ai](https://www.ibm.com/products/watsonx-ai) (Keys will be provided.)
+3. [DataStax Langflow](https://langflow.org) (Options to run Datastax Hosted Langflow, via Github Codespaces, or locally)
 
 Follow the below steps and note down the **Astra DB API Endpoint**, **Astra DB ApplicationToken**, **watsonx.ai Project ID**, **watsonx.ai API Key** and **watsonx.ai URL** as we'll need them later on.
 
