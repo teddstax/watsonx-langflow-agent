@@ -32,18 +32,6 @@ Make sure you have a vector-capable Astra database (get one for free at [astra.d
 
     ![astradb](./assets/astra-new-db.png)
 
-### Sign up for IBM watsonx.ai
-- Go to [IBM watsonx.ai](https://www.ibm.com/products/watsonx-ai) and sign up for a free trial or log in.
-- Once logged in, create a new project (or use an existing one).
-- Navigate to the API Keys section (Administration → Access (IAM) → API keys) and create a new **API key**. Save this key securely.
-- Note your **Project ID** (found in your watsonx.ai project details).
-- You will also need the **watsonx.ai URL** (typically `https://eu-de.ml.cloud.ibm.com` or as shown in your project dashboard).
-- For more details, see the [watsonx.ai documentation](https://dataplatform.cloud.ibm.com/docs/content/wsj/analyze-data/ml-authentication.html?context=wx).
-
-    *(Optional: If you need a service instance, create a new instance of "watsonx.ai" in the IBM Cloud console and bind it to your project.)*
-
-    *(You may also need to enable the appropriate LLM model in your project, such as `ibm/granite-3-3-8b-instruct` or similar.)*
-
 ### Get access to Langflow
 There are several way to gain access to Langflow. Pick the one that suits you best 😊:
 - [Langflow desktop](https://www.langflow.org/desktop) (currently only for Mac)
